@@ -10,17 +10,23 @@ export class UsersService {
       {
         userId: 1,
         username: 'herren',
-        password: '123',
+        password: 'handball',
+        canEditHerren: true,
+        canEditDamen: false,
       },
       {
         userId: 2,
         username: 'damen',
         password: '123',
+        canEditHerren: false,
+        canEditDamen: true,
       },
       {
         userId: 3,
         username: 'all',
         password: '123',
+        canEditHerren: true,
+        canEditDamen: true,
       },
     ];
   }

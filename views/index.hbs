@@ -82,10 +82,11 @@
           <div class="form-group">
             <label for="mannschaft">Mannschaft</label>
             <select name="mannschaft" class="form-control" id="mannschaft">
-              <option value="herren">Herren</option>
-              <option value="damen">Damen</option>
+              {{#if user.canEditHerren}}<option value="herren">Herren</option>{{/if}}
+              {{#if user.canEditDamen}}<option value="damen">Damen</option>{{/if}}
             </select>
           </div>
+
           <button type="submit" class="btn btn-primary">Hinzufügen</button>
         </form>
       </div>
