@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "sound-uploader",
+            "script": "npm",
+            "args" : "start"
+        }
+    ]
+}
