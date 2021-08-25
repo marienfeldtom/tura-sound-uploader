@@ -21,6 +21,7 @@ import { AuthenticatedGuard } from './common/guards/authenticated.guard';
 import { AuthExceptionFilter } from './common/filters/auth-exceptions.filter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as fs from 'fs';
+import path from 'path';
 
 @Controller()
 @UseFilters(AuthExceptionFilter)
@@ -102,9 +103,23 @@ export class AppController {
   @UseGuards(AuthenticatedGuard)
   @Get('/delete/:id')
   async delete(@Param() params, @Res() res: Response, @Req() req) {
+    const spieler = await this.lowdbService.find({ id: params.id }, 'spieler');
+    const mp3path = './public/uploads/' + spieler.username + '.mp3';
     await this.lowdbService.delete({ id: params.id }, 'spieler');
-    req.flash('message', 'Spieler wurde erfolgreich gelöscht!');
-    res.redirect('/all');
+    try {
+      if (fs.existsSync(mp3path)) {
+        fs.unlink(mp3path, function (err) {
+          if (err) throw err;
+          req.flash('message', 'Spieler wurde erfolgreich gelöscht!');
+          res.redirect('/all');
+        });
+      } else {
+        req.flash('message', 'Spieler wurde erfolgreich gelöscht!');
+        res.redirect('/all');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   @UseGuards(AuthenticatedGuard)
