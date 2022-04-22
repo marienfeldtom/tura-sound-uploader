@@ -96,7 +96,7 @@ export class AppController {
   async info() {
     const spieler = await this.lowdbService.findAll('spieler');
     return spieler.filter(function (element) {
-      return element.version > 0;
+      return element.version > 0 && element.active;
     });
   }
 
@@ -123,6 +123,14 @@ export class AppController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @Get('/switch/:id')
+  async switch(@Param() params, @Res() res: Response, @Req() req) {
+    const spieler = await this.lowdbService.find({ id: params.id }, 'spieler');
+    spieler.active = !spieler.active;
+    res.redirect('/all');
+  }
+
+  @UseGuards(AuthenticatedGuard)
   @Post('/spieler')
   async addSpieler(@Req() request, @Res() res: Response) {
     await this.lowdbService.add(
@@ -131,6 +139,7 @@ export class AppController {
         anzeigename: request.body.anzeigename,
         mannschaft: request.body.mannschaft,
         version: 0,
+        active: true,
       },
       'spieler',
     );

@@ -1,97 +1,162 @@
 {{#if message}}
-<div class="alert alert-success" role="alert">
-  {{message}}
-</div>
+  <div class='alert alert-success' role='alert'>
+    {{message}}
+  </div>
 {{/if}}
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+<button
+  type='button'
+  class='btn btn-primary'
+  data-toggle='modal'
+  data-target='#exampleModal'
+>
   Spieler hinzufügen
 </button>
 
-<table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-search-clear-button="true"
-  data-filter-control="true" data-locale="de-DE">
+<table
+  id='table'
+  data-toggle='table'
+  data-pagination='true'
+  data-search='true'
+  data-show-search-clear-button='true'
+  data-filter-control='true'
+  data-locale='de-DE'
+>
   <thead>
     <tr>
-      <th data-sortable="true">Username</th>
-      <th data-sortable="true">Anzeigename</th>
-      <th data-field="mannschaft" data-filter-control="select">Mannschaft</th>
+      <th data-sortable='true'>Username</th>
+      <th data-sortable='true'>Anzeigename</th>
+      <th data-field='mannschaft' data-filter-control='select'>Mannschaft</th>
       <th>Version</th>
       <th>Aktion</th>
     </tr>
   </thead>
   <tbody>
     {{#each spieler}}
-    <tr>
-      <td>{{this.username}}</td>
-      <td>{{this.anzeigename}}</td>
-      <td>{{this.mannschaft}}</td>
-      <td>{{this.version}}</td>
-      <td>
-        {{#if version}}
-        <a type="button" href="edit/{{this.id}}" class="btn btn-info">
-          Lied bearbeiten
-        </a> <a href="delete/{{this.id}}" type="button" class="btn btn-danger">
-          Löschen
-        </a>
+      <tr>
+        <td>{{this.username}}</td>
+        <td>{{this.anzeigename}}</td>
+        <td>{{this.mannschaft}}</td>
+        <td>{{this.version}}</td>
+        <td>
+          {{#if version}}
+            <a type='button' href='edit/{{this.id}}' class='btn btn-info'>
+              Lied bearbeiten
+            </a>
+            <a href='delete/{{this.id}}' type='button' class='btn btn-danger'>
+              Löschen
+            </a>
 
-        <button type="button" onclick="play('{{this.username}}')" class="btn btn-success">
-          Abspielen
-        </button>
-        <audio id="{{this.username}}" src="/uploads/{{this.username}}.mp3"></audio>
-        {{else}}
-        <a type="button" href="edit/{{this.id}}" class="btn btn-info">
-          Lied hinzufügen
-        </a> <a href="delete/{{this.id}}" type="button" class="btn btn-danger">
-          Löschen
-        </a>
-        {{/if}}
-      </td>
-    </tr>
+            <button
+              type='button'
+              onclick="play('{{this.username}}')"
+              class='btn btn-success'
+            >
+              Abspielen
+            </button>
+            <audio
+              id='{{this.username}}'
+              src='/uploads/{{this.username}}.mp3'
+            ></audio>
+          {{else}}
+            <a type='button' href='edit/{{this.id}}' class='btn btn-info'>
+              Lied hinzufügen
+            </a>
+            <a href='delete/{{this.id}}' type='button' class='btn btn-danger'>
+              Löschen
+            </a>
+          {{/if}}
+
+          {{#if active}}
+            <a href='switch/{{this.id}}' type='button' class='btn btn-danger'>
+              Deaktivieren
+            </a>
+          {{else}}
+            <a href='switch/{{this.id}}' type='button' class='btn btn-success'>
+              Aktivieren
+            </a>
+          {{/if}}
+
+        </td>
+      </tr>
 
     {{/each}}
   </tbody>
 </table>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Spieler hinzufügen</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+<div
+  class='modal fade'
+  id='exampleModal'
+  tabindex='-1'
+  role='dialog'
+  aria-labelledby='exampleModalLabel'
+  aria-hidden='true'
+>
+  <div class='modal-dialog' role='document'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h5 class='modal-title' id='exampleModalLabel'>Spieler hinzufügen</h5>
+        <button
+          type='button'
+          class='close'
+          data-dismiss='modal'
+          aria-label='Close'
+        >
+          <span aria-hidden='true'>&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form action="spieler" method="POST">
-          <div class="form-group">
-            <label for="exampleInputEmail1">Username</label>
-            <input type="text" class="form-control" name="username" id="username" aria-describedby="usernameHelp"
-              placeholder="Username">
-            <small id="usernameHelp" class="form-text text-muted">Format: vornamenachname (Ohne Umlaute!) <br>
+      <div class='modal-body'>
+        <form action='spieler' method='POST'>
+          <div class='form-group'>
+            <label for='exampleInputEmail1'>Username</label>
+            <input
+              type='text'
+              class='form-control'
+              name='username'
+              id='username'
+              aria-describedby='usernameHelp'
+              placeholder='Username'
+            />
+            <small id='usernameHelp' class='form-text text-muted'>Format:
+              vornamenachname (Ohne Umlaute!)
+              <br />
               Beispiel: tommarienfeld</small>
           </div>
-          <div class="form-group">
-            <label for="anzeigename">Anzeigename</label>
-            <input type="text" name="anzeigename" class="form-control" id="anzeigename" placeholder="Anzeigename"
-              aria-describedby="anzeigenameHelp">
-            <small id="anzeigenameHelp" class="form-text text-muted">Beispiel: Tom oder Lasse M. (Ohne
-              Umlaute!)</small>
+          <div class='form-group'>
+            <label for='anzeigename'>Anzeigename</label>
+            <input
+              type='text'
+              name='anzeigename'
+              class='form-control'
+              id='anzeigename'
+              placeholder='Anzeigename'
+              aria-describedby='anzeigenameHelp'
+            />
+            <small id='anzeigenameHelp' class='form-text text-muted'>Beispiel:
+              Tom oder Lasse M. (Ohne Umlaute!)</small>
           </div>
-          <div class="form-group">
-            <label for="mannschaft">Mannschaft</label>
-            <select name="mannschaft" class="form-control" id="mannschaft">
-              {{#if user.canEditHerren}}<option value="herren">Herren</option>{{/if}}
-              {{#if user.canEditDamen}}<option value="damen">Damen</option>{{/if}}
+          <div class='form-group'>
+            <label for='mannschaft'>Mannschaft</label>
+            <select name='mannschaft' class='form-control' id='mannschaft'>
+              {{#if user.canEditHerren}}<option
+                  value='herren'
+                >Herren</option>{{/if}}
+              {{#if user.canEditDamen}}<option
+                  value='damen'
+                >Damen</option>{{/if}}
             </select>
           </div>
 
-          <button type="submit" class="btn btn-primary">Hinzufügen</button>
+          <button type='submit' class='btn btn-primary'>Hinzufügen</button>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+      <div class='modal-footer'>
+        <button
+          type='button'
+          class='btn btn-secondary'
+          data-dismiss='modal'
+        >Abbrechen</button>
       </div>
     </div>
   </div>

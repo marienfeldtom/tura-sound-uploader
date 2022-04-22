@@ -5,14 +5,16 @@
       "anzeigename": "Tom",
       "mannschaft": "herren",
       "version": 1,
-      "id": "e6679840-05ae-11ec-bd14-07787afd9461"
+      "id": "e6679840-05ae-11ec-bd14-07787afd9461",
+      "active": true
     },
     {
       "username": "annekartsens",
       "anzeigename": "Anne",
       "mannschaft": "damen",
       "version": 1,
-      "id": "e6679841-05ae-11ec-bd14-07787afd9461"
+      "id": "e6679841-05ae-11ec-bd14-07787afd9461",
+      "active": true
     }
   ]
 }
