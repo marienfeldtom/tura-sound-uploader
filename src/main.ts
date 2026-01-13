@@ -34,6 +34,6 @@ async function bootstrap() {
   app.use(passport.session());
   app.use(flash());
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
