@@ -1,0 +1,543 @@
+<div class="page">
+
+  <!-- Header / Breadcrumb -->
+  <header class="mb-xl">
+    <div class="flex items-center gap-md mb-md flex-wrap">
+      <a href="/dashboard" class="btn btn-ghost btn-sm" aria-label="Zurück zum Dashboard">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+        Dashboard
+      </a>
+      <span style="color: var(--c-border-strong);" aria-hidden="true">/</span>
+      <div class="team-id">{{mannschaft.id}}</div>
+    </div>
+    <div class="section-header">
+      <div>
+        <h1 style="font-size: var(--fs-2xl);">{{mannschaft.name}}</h1>
+        <p class="text-muted text-sm mt-xs">
+          Mannschaftsverwaltung &amp; Spieler-Kader
+          {{#if isOwner}}&nbsp;·&nbsp;<span class="badge badge-success">Admin</span>{{/if}}
+        </p>
+      </div>
+      {{#if isOwner}}
+      <button class="btn btn-primary" onclick="document.getElementById('dialog-add').showModal()">
+        <i class="bi bi-person-plus" aria-hidden="true"></i>
+        Spieler hinzufügen
+      </button>
+      {{/if}}
+    </div>
+  </header>
+
+  <!-- Flash messages -->
+  {{#if uploadLink}}
+  <div class="alert alert-info mb-xl flex flex-col gap-sm" role="status" style="border-left: 4px solid var(--c-brand);">
+    <div class="flex items-center gap-sm">
+      <i class="bi bi-link-45deg" style="font-size: 1.4rem; color: var(--c-brand);" aria-hidden="true"></i>
+      <div>
+        <strong>Upload-Link für {{uploadLink.spielerName}} erstellt!</strong>
+        <p class="text-sm text-muted">Teile diesen Link mit dem Spieler, damit er seinen Torsong selbst hochladen kann.</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-sm w-full mt-xs flex-wrap">
+      <input type="text" id="upload-link-input" value="{{uploadLink.url}}" readonly
+        style="font-family: monospace; font-size: var(--fs-sm); background: var(--c-bg);"
+        onclick="this.select();">
+      <button type="button" class="btn btn-primary btn-sm flex-shrink-0" onclick="copyUploadLink()" id="btn-copy-upload-link">
+        <i class="bi bi-clipboard" id="btn-copy-icon" aria-hidden="true"></i>
+        <span id="btn-copy-text">Link kopieren</span>
+      </button>
+    </div>
+  </div>
+  {{/if}}
+  {{#if message}}
+  <div class="alert alert-success mb-xl" role="status">
+    <i class="bi bi-check-circle-fill flex-shrink-0" aria-hidden="true"></i>
+    <div>{{message}}</div>
+  </div>
+  {{/if}}
+  {{#if error}}
+  <div class="alert alert-error mb-xl" role="alert">
+    <i class="bi bi-exclamation-triangle-fill flex-shrink-0" aria-hidden="true"></i>
+    <div>{{error}}</div>
+  </div>
+  {{/if}}
+
+  <!-- Info Box: Erklärung der App-Sichtbarkeit & Torsongs -->
+  <div class="alert alert-info mb-xl" role="note" style="border-left: 4px solid var(--c-brand-mid);">
+    <i class="bi bi-info-circle-fill flex-shrink-0" style="font-size: 1.25rem; color: var(--c-brand-mid);" aria-hidden="true"></i>
+    <div class="text-sm">
+      <strong>Sichtbarkeit in der 7secs App:</strong>
+      Nur <strong>aktive</strong> Spieler mit hochgeladenem Torsong erscheinen während des Spiels in der App.
+      Inaktive Spieler werden in der App <strong>komplett ausgeblendet</strong> (z.&nbsp;B. bei Ausfällen oder Spielpausen).
+      Schalte den Status einfach per Klick auf den Schalter um.
+    </div>
+  </div>
+
+  {{#if spieler.length}}
+  <!-- Filter & Search Bar -->
+  <div class="filter-bar">
+    <div class="filter-tabs" role="tablist" aria-label="Spieler filtern">
+      <button type="button" class="filter-tab active" data-filter="all" onclick="setFilter('all', this)">
+        <span>Alle</span>
+        <span class="filter-tab-count">{{totalCount}}</span>
+      </button>
+      <button type="button" class="filter-tab" data-filter="active" onclick="setFilter('active', this)">
+        <span class="status-dot active"></span>
+        <span>Aktiv in App</span>
+        <span class="filter-tab-count">{{activeCount}}</span>
+      </button>
+      <button type="button" class="filter-tab" data-filter="inactive" onclick="setFilter('inactive', this)">
+        <span class="status-dot inactive"></span>
+        <span>Inaktiv (Ausgeblendet)</span>
+        <span class="filter-tab-count">{{inactiveCount}}</span>
+      </button>
+      <button type="button" class="filter-tab" data-filter="nosound" onclick="setFilter('nosound', this)">
+        <span class="status-dot warning"></span>
+        <span>Ohne Sound</span>
+        <span class="filter-tab-count" id="no-sound-count">-</span>
+      </button>
+    </div>
+
+    <div class="search-box">
+      <i class="bi bi-search search-box-icon" aria-hidden="true"></i>
+      <input type="text" id="player-search" placeholder="Spieler suchen..." oninput="handleSearch(this.value)" aria-label="Spieler filtern">
+    </div>
+  </div>
+
+  <!-- Player list -->
+  <ul class="grid-auto" id="player-grid" style="list-style: none;" aria-label="Spielerliste">
+    {{#each spieler}}
+    <li class="player-card {{#unless this.active}}player-inactive{{/unless}}"
+        data-active="{{#if this.active}}true{{else}}false{{/if}}"
+        data-has-sound="{{#if this.version}}true{{else}}false{{/if}}"
+        data-search="{{this.anzeigename}}">
+
+      <!-- Card Header: Avatar, Name, Handle & Status Badge -->
+      <div class="player-card-header">
+        <div class="player-avatar" aria-hidden="true">{{this.anzeigename.[0]}}</div>
+        <div class="player-info">
+          <div class="player-name truncate" title="{{this.anzeigename}}">{{this.anzeigename}}</div>
+        </div>
+        <div>
+          {{#if this.active}}
+          <span class="badge badge-status-active" title="In der App sichtbar">
+            <span class="status-dot active"></span>
+            Aktiv
+          </span>
+          {{else}}
+          <span class="badge badge-status-inactive" title="In der App nicht sichtbar">
+            <span class="status-dot inactive"></span>
+            Ausgeblendet
+          </span>
+          {{/if}}
+        </div>
+      </div>
+
+      <!-- Visibility Toggle Box: Explains exactly what the toggle does -->
+      <div class="player-visibility-box {{#if this.active}}is-active{{else}}is-inactive{{/if}}">
+        <div class="visibility-info">
+          <div class="visibility-title">
+            {{#if this.active}}
+            <i class="bi bi-eye-fill" aria-hidden="true"></i>
+            In App sichtbar
+            {{else}}
+            <i class="bi bi-eye-slash-fill" aria-hidden="true"></i>
+            In App ausgeblendet
+            {{/if}}
+          </div>
+          <div class="visibility-desc">
+            {{#if this.active}}
+            Erscheint in der App am Spieltag.
+            {{else}}
+            Wird in der App <strong>nicht</strong> angezeigt.
+            {{/if}}
+          </div>
+        </div>
+
+        {{#if ../isOwner}}
+        <a href="/spieler/switch/{{this.id}}"
+           class="toggle-switch-ui {{#if this.active}}is-active{{/if}}"
+           role="switch"
+           aria-checked="{{#if this.active}}true{{else}}false{{/if}}"
+           title="{{#if this.active}}Klicken, um Spieler in der App auszublenden{{else}}Klicken, um Spieler in der App anzuzeigen{{/if}}"
+           aria-label="Sichtbarkeit für {{this.anzeigename}} umschalten">
+          <span class="toggle-switch-handle">
+            <i class="bi {{#if this.active}}bi-check{{else}}bi-x{{/if}}" aria-hidden="true"></i>
+          </span>
+        </a>
+        {{/if}}
+      </div>
+
+      <!-- Sound Preview Box -->
+      <div class="player-sound-box">
+        {{#if this.version}}
+        <div class="sound-box-header">
+          <span class="sound-ready-label">
+            <i class="bi bi-music-note-beamed text-brand" aria-hidden="true"></i>
+            Torsong bereit
+          </span>
+          <span class="badge badge-success" title="Sound-Version {{this.version}}">v{{this.version}}</span>
+        </div>
+        <div class="mt-xs">
+          <audio id="audio-{{this.id}}" src="/uploads/{{this.username}}.mp3" preload="none"></audio>
+          <button
+            type="button"
+            class="btn btn-success btn-sm w-full"
+            id="btn-{{this.id}}"
+            onclick="togglePlay('{{this.id}}')"
+            aria-label="Sound für {{this.anzeigename}} abspielen">
+            <i class="bi bi-play-fill" aria-hidden="true"></i>
+            Sound abspielen
+          </button>
+        </div>
+        {{else}}
+        <div class="sound-box-header">
+          <span class="sound-empty-label">
+            <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+            Kein Torsong hochgeladen
+          </span>
+          <span class="badge badge-muted">Stumm</span>
+        </div>
+        {{#if ../isOwner}}
+        <button type="button" class="btn btn-outline btn-sm w-full mt-xs"
+          onclick="openUpload('{{this.id}}', '{{this.anzeigename}}')">
+          <i class="bi bi-cloud-arrow-up" aria-hidden="true"></i>
+          Sound hinzufügen
+        </button>
+        {{/if}}
+        {{/if}}
+      </div>
+
+      <!-- Actions Footer (Admin only) -->
+      {{#if ../isOwner}}
+      <div class="flex gap-xs flex-wrap items-center mt-auto" style="border-top: 1.5px solid var(--c-border); padding-top: var(--sp-sm);">
+        <!-- Upload / Re-Upload -->
+        <button class="btn btn-outline btn-sm flex-1"
+          onclick="openUpload('{{this.id}}', '{{this.anzeigename}}')"
+          title="{{#if this.version}}Anderen Torsong hochladen{{else}}Torsong hochladen{{/if}}"
+          aria-label="Sound für {{this.anzeigename}} hochladen">
+          <i class="bi bi-cloud-upload" aria-hidden="true"></i>
+          {{#if this.version}}Neu hochladen{{else}}Hochladen{{/if}}
+        </button>
+
+        <!-- Edit player name -->
+        <button type="button" class="btn btn-outline btn-sm"
+          onclick="openEditSpieler('{{this.id}}', '{{this.anzeigename}}')"
+          title="Spielernamen bearbeiten"
+          aria-label="Name für {{this.anzeigename}} bearbeiten">
+          <i class="bi bi-pencil" aria-hidden="true"></i>
+          <span class="sm-hidden">Name</span>
+        </button>
+
+        <!-- Share link -->
+        <form action="/upload-token" method="POST" style="display: contents;">
+          <input type="hidden" name="spielerId" value="{{this.id}}">
+          <input type="hidden" name="mannschaftId" value="{{../mannschaft.id}}">
+          <button type="submit" class="btn btn-outline btn-sm" title="Teilbaren Upload-Link für Spieler erstellen"
+            aria-label="Upload-Link für {{this.anzeigename}} erstellen">
+            <i class="bi bi-share" aria-hidden="true"></i>
+            <span class="sm-hidden">Link</span>
+          </button>
+        </form>
+
+        <!-- Delete -->
+        <a href="/spieler/delete/{{this.id}}"
+          class="btn btn-danger btn-sm"
+          onclick="return confirm('{{this.anzeigename}} wirklich löschen? Der Sound wird ebenfalls unwiderruflich gelöscht.')"
+          title="Spieler löschen"
+          aria-label="{{this.anzeigename}} löschen">
+          <i class="bi bi-trash" aria-hidden="true"></i>
+        </a>
+      </div>
+      {{/if}}
+
+    </li>
+    {{/each}}
+  </ul>
+
+  <div id="no-filter-results" class="card-surface p-xl text-center mt-lg" style="display: none; border-radius: var(--r-lg);">
+    <i class="bi bi-search" style="font-size: 2rem; color: var(--c-text-light);" aria-hidden="true"></i>
+    <p class="mt-sm font-bold">Keine Spieler gefunden</p>
+    <p class="text-muted text-sm mt-xs">Passe deinen Suchbegriff oder Filter an.</p>
+  </div>
+
+  <!-- 7s tip at bottom for admins with players -->
+  {{#if isOwner}}
+  <aside class="alert alert-accent mt-2xl" role="note">
+    <i class="bi bi-stopwatch flex-shrink-0" aria-hidden="true" style="font-size: 1.25rem;"></i>
+    <div>
+      <strong>Tipp für den Hallensound:</strong>
+      Schneide Torsongs auf ca. 7 Sekunden zu. Das sorgt für maximale Stimmung beim Torjubel und hält den Spielfluss aufrecht!
+    </div>
+  </aside>
+  {{/if}}
+
+  {{else}}
+  <div class="card-surface p-2xl text-center" style="border-radius: var(--r-lg);">
+    <i class="bi bi-person-x" style="font-size: 2.5rem; color: var(--c-text-light);" aria-hidden="true"></i>
+    <p class="mt-md font-bold">Noch keine Spieler im Kader</p>
+    <p class="text-muted text-sm mt-sm">
+      {{#if isOwner}}Füge deinen ersten Spieler hinzu und lade seinen 7-Sekunden-Sound hoch oder teile einen Upload-Link.{{else}}Diese Mannschaft hat noch keine Spieler.{{/if}}
+    </p>
+    {{#if isOwner}}
+    <button class="btn btn-primary mt-xl" onclick="document.getElementById('dialog-add').showModal()">
+      <i class="bi bi-person-plus" aria-hidden="true"></i>
+      Ersten Spieler hinzufügen
+    </button>
+    {{/if}}
+  </div>
+  {{/if}}
+
+</div>
+
+<!-- ═══ Dialog: Spieler hinzufügen ═══ -->
+{{#if isOwner}}
+<dialog id="dialog-add" aria-labelledby="dialog-add-title">
+  <form action="/spieler" method="POST">
+    <input type="hidden" name="mannschaftId" value="{{mannschaft.id}}">
+    <div class="dialog-header">
+      <h2 id="dialog-add-title" style="font-size: var(--fs-lg);">
+        <i class="bi bi-person-plus" aria-hidden="true"></i>
+        Spieler hinzufügen
+      </h2>
+      <button type="button" class="btn btn-ghost btn-sm"
+        onclick="this.closest('dialog').close()" aria-label="Schließen">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="dialog-body flex flex-col gap-lg">
+      <div class="form-group">
+        <label for="add-anzeigename">Name des Spielers</label>
+        <input type="text" id="add-anzeigename" name="anzeigename"
+          placeholder="z.B. Tom M." required autofocus>
+        <span class="form-hint">Wird in der App und bei der Sound-Wiedergabe angezeigt.</span>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Abbrechen</button>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-person-plus" aria-hidden="true"></i>
+        Hinzufügen
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ═══ Dialog: Spieler bearbeiten ═══ -->
+<dialog id="dialog-edit-spieler" aria-labelledby="dialog-edit-title">
+  <form id="form-edit-spieler" method="POST" action="">
+    <input type="hidden" name="id" id="edit-spieler-id">
+    <div class="dialog-header">
+      <h2 id="dialog-edit-title" style="font-size: var(--fs-lg);">
+        <i class="bi bi-pencil-square" aria-hidden="true"></i>
+        Spielername bearbeiten
+      </h2>
+      <button type="button" class="btn btn-ghost btn-sm"
+        onclick="this.closest('dialog').close()" aria-label="Schließen">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="dialog-body flex flex-col gap-lg">
+      <div class="form-group">
+        <label for="edit-anzeigename">Name des Spielers</label>
+        <input type="text" id="edit-anzeigename" name="anzeigename"
+          placeholder="z.B. Tom M." required autofocus>
+        <span class="form-hint">Wird in der App und bei der Sound-Wiedergabe angezeigt.</span>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Abbrechen</button>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg" aria-hidden="true"></i>
+        Speichern
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ═══ Dialog: Sound Upload ═══ -->
+<dialog id="dialog-upload" aria-labelledby="dialog-upload-title">
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="id" id="upload-spieler-id">
+    <div class="dialog-header">
+      <h2 id="dialog-upload-title" style="font-size: var(--fs-lg);">
+        <i class="bi bi-cloud-upload" aria-hidden="true"></i>
+        Sound für <span id="upload-spieler-name" aria-live="polite"></span>
+      </h2>
+      <button type="button" class="btn btn-ghost btn-sm"
+        onclick="this.closest('dialog').close()" aria-label="Schließen">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="dialog-body flex flex-col gap-lg">
+      <div class="alert alert-accent" role="note">
+        <i class="bi bi-stopwatch flex-shrink-0" aria-hidden="true"></i>
+        <span><strong>Tipp:</strong> Schneide den Song auf ~7 Sekunden. Das ist der perfekte Hallen-Moment.</span>
+      </div>
+      <div class="form-group">
+        <label for="upload-file">MP3-Datei</label>
+        <input type="file" id="upload-file" name="file" accept=".mp3,audio/mpeg" required>
+        <span class="form-hint">Nur MP3-Format, max. 10 MB. Empfohlen: ~7 Sekunden Länge.</span>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Abbrechen</button>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-upload" aria-hidden="true"></i>
+        Hochladen
+      </button>
+    </div>
+  </form>
+</dialog>
+{{/if}}
+
+<script>
+function openUpload(id, name) {
+  document.getElementById('upload-spieler-id').value = id;
+  document.getElementById('upload-spieler-name').textContent = name;
+  document.getElementById('dialog-upload').showModal();
+}
+
+function openEditSpieler(id, currentName) {
+  document.getElementById('edit-spieler-id').value = id;
+  document.getElementById('edit-anzeigename').value = currentName;
+  document.getElementById('form-edit-spieler').action = '/spieler/edit/' + id;
+  const dialog = document.getElementById('dialog-edit-spieler');
+  dialog.showModal();
+  setTimeout(() => {
+    const input = document.getElementById('edit-anzeigename');
+    if (input) {
+      input.focus();
+      input.select();
+    }
+  }, 50);
+}
+
+function copyUploadLink() {
+  const input = document.getElementById('upload-link-input');
+  if (!input) return;
+  const url = input.value;
+  const icon = document.getElementById('btn-copy-icon');
+  const text = document.getElementById('btn-copy-text');
+
+  function showSuccess() {
+    if (icon) icon.className = 'bi bi-check2';
+    if (text) text.textContent = 'Kopiert!';
+    setTimeout(() => {
+      if (icon) icon.className = 'bi bi-clipboard';
+      if (text) text.textContent = 'Link kopieren';
+    }, 2500);
+  }
+
+  function fallbackCopy() {
+    input.select();
+    input.setSelectionRange(0, 99999);
+    try {
+      document.execCommand('copy');
+      showSuccess();
+    } catch (err) {
+      alert('Kopieren fehlgeschlagen. Bitte Link manuell kopieren.');
+    }
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(showSuccess, fallbackCopy);
+  } else {
+    fallbackCopy();
+  }
+}
+
+// Audio: only one plays at a time
+let currentAudioId = null;
+
+function togglePlay(id) {
+  const audio = document.getElementById('audio-' + id);
+  const btn   = document.getElementById('btn-' + id);
+
+  if (currentAudioId && currentAudioId !== id) {
+    const prev    = document.getElementById('audio-' + currentAudioId);
+    const prevBtn = document.getElementById('btn-' + currentAudioId);
+    if (prev) { prev.pause(); prev.currentTime = 0; }
+    if (prevBtn) prevBtn.innerHTML = '<i class="bi bi-play-fill" aria-hidden="true"></i> Sound abspielen';
+    currentAudioId = null;
+  }
+
+  if (audio.paused) {
+    audio.play();
+    btn.innerHTML = '<i class="bi bi-stop-fill" aria-hidden="true"></i> Stop';
+    currentAudioId = id;
+    audio.onended = () => {
+      btn.innerHTML = '<i class="bi bi-play-fill" aria-hidden="true"></i> Sound abspielen';
+      currentAudioId = null;
+    };
+  } else {
+    audio.pause();
+    audio.currentTime = 0;
+    btn.innerHTML = '<i class="bi bi-play-fill" aria-hidden="true"></i> Sound abspielen';
+    currentAudioId = null;
+  }
+}
+
+// Filter and search handling
+let currentFilter = 'all';
+let currentSearchTerm = '';
+
+function updateFilterCounts() {
+  const cards = document.querySelectorAll('#player-grid .player-card');
+  let noSoundCount = 0;
+  cards.forEach(card => {
+    if (card.dataset.hasSound !== 'true') noSoundCount++;
+  });
+  const noSoundEl = document.getElementById('no-sound-count');
+  if (noSoundEl) noSoundEl.textContent = noSoundCount;
+}
+
+function applyFilters() {
+  const cards = document.querySelectorAll('#player-grid .player-card');
+  let visibleCount = 0;
+
+  cards.forEach(card => {
+    const isActive = card.dataset.active === 'true';
+    const hasSound = card.dataset.hasSound === 'true';
+    const searchText = (card.dataset.search || '').toLowerCase();
+
+    let matchesFilter = true;
+    if (currentFilter === 'active') matchesFilter = isActive;
+    else if (currentFilter === 'inactive') matchesFilter = !isActive;
+    else if (currentFilter === 'nosound') matchesFilter = !hasSound;
+
+    let matchesSearch = !currentSearchTerm || searchText.includes(currentSearchTerm.toLowerCase());
+
+    if (matchesFilter && matchesSearch) {
+      card.style.display = '';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  const noResults = document.getElementById('no-filter-results');
+  if (noResults) {
+    noResults.style.display = visibleCount === 0 && cards.length > 0 ? 'block' : 'none';
+  }
+}
+
+function setFilter(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  applyFilters();
+}
+
+function handleSearch(term) {
+  currentSearchTerm = term.trim();
+  applyFilters();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateFilterCounts();
+  // Close dialogs on backdrop click
+  document.querySelectorAll('dialog').forEach(d => {
+    d.addEventListener('click', e => { if (e.target === d) d.close(); });
+  });
+});
+</script>

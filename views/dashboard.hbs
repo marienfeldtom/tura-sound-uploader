@@ -1,0 +1,104 @@
+<div class="page">
+
+  <!-- Page header -->
+  <header class="section-header">
+    <div>
+      <h1 style="font-size: var(--fs-2xl);">Meine Mannschaften</h1>
+      <p class="text-muted text-sm mt-xs">Erstelle und verwalte deine eigenen Teams.</p>
+    </div>
+    <button class="btn btn-primary" onclick="document.getElementById('dialog-new').showModal()">
+      <i class="bi bi-plus" aria-hidden="true"></i>
+      Neue Mannschaft
+    </button>
+  </header>
+
+  <!-- Flash messages -->
+  {{#if message}}
+  <div class="alert alert-success mb-xl" role="status">
+    <i class="bi bi-check-circle-fill flex-shrink-0" aria-hidden="true"></i>
+    <div>{{message}}</div>
+  </div>
+  {{/if}}
+  {{#if error}}
+  <div class="alert alert-error mb-xl" role="alert">
+    <i class="bi bi-exclamation-triangle-fill flex-shrink-0" aria-hidden="true"></i>
+    <div>{{error}}</div>
+  </div>
+  {{/if}}
+
+  <!-- Team grid -->
+  {{#if mannschaften.length}}
+  <div class="grid-auto">
+    {{#each mannschaften}}
+    <article class="card p-xl flex flex-col gap-lg">
+
+      <!-- ID – very prominent -->
+      <div class="text-center">
+        <div class="team-id team-id-lg">{{this.id}}</div>
+        <h2 class="mt-md" style="font-size: var(--fs-xl);">{{this.name}}</h2>
+        <span class="badge badge-success mt-sm">
+          <i class="bi bi-shield-check" aria-hidden="true"></i>
+          Deine Mannschaft
+        </span>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-sm" style="border-top: 1.5px solid var(--c-border); padding-top: var(--sp-lg);">
+        <a href="/mannschaft/{{urlId this.id}}" class="btn btn-primary btn-sm flex-1">
+          <i class="bi bi-people" aria-hidden="true"></i>
+          Spieler verwalten
+        </a>
+      </div>
+    </article>
+    {{/each}}
+  </div>
+  {{else}}
+  <div class="card-surface p-2xl text-center" style="border-radius: var(--r-lg);">
+    <i class="bi bi-people" style="font-size: 2.5rem; color: var(--c-text-light);" aria-hidden="true"></i>
+    <p class="mt-md font-bold">Noch keine Mannschaften</p>
+    <p class="text-muted text-sm mt-sm mb-xl">Erstelle dein erstes Team und starte mit den Torsongs.</p>
+    <button class="btn btn-primary" onclick="document.getElementById('dialog-new').showModal()">
+      <i class="bi bi-plus" aria-hidden="true"></i>
+      Mannschaft erstellen
+    </button>
+  </div>
+  {{/if}}
+
+</div>
+
+<!-- ═══ Dialog: Neue Mannschaft ═══ -->
+<dialog id="dialog-new" aria-labelledby="dialog-new-title">
+  <form action="/mannschaft/new" method="POST">
+    <div class="dialog-header">
+      <h2 id="dialog-new-title" style="font-size: var(--fs-lg);">
+        <i class="bi bi-plus-circle" aria-hidden="true"></i>
+        Neue Mannschaft erstellen
+      </h2>
+      <button type="button" class="btn btn-ghost btn-sm"
+        onclick="this.closest('dialog').close()" aria-label="Schließen">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="dialog-body flex flex-col gap-lg">
+      <div class="form-group">
+        <label for="new-team-name">Mannschaftsname</label>
+        <input type="text" id="new-team-name" name="name"
+          placeholder="z.B. Damen U23" required autofocus>
+        <span class="form-hint">Du bekommst eine zufällige 3-stellige ID – z.B. <strong>#X7K</strong></span>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-ghost" onclick="this.closest('dialog').close()">Abbrechen</button>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-plus" aria-hidden="true"></i>
+        Erstellen
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+document.querySelectorAll('dialog').forEach(d => {
+  d.addEventListener('click', e => { if (e.target === d) d.close(); });
+});
+</script>

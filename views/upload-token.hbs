@@ -1,0 +1,108 @@
+{{!< false}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sound hochladen – 7secs</title>
+  <meta name="color-scheme" content="light">
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      min-height: 100svh;
+      background: var(--c-surface);
+      display: grid;
+      place-items: center;
+      padding: var(--sp-xl) var(--sp-md);
+    }
+
+    .upload-wrap { width: min(480px, 100%); }
+
+    .upload-brand {
+      text-align: center;
+      margin-bottom: var(--sp-xl);
+      font-weight: 800;
+      font-size: var(--fs-lg);
+      color: var(--c-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-sm);
+    }
+  </style>
+</head>
+<body>
+
+<div class="upload-wrap">
+
+  <div class="upload-brand">
+    <span style="color: var(--c-accent); font-size: 1.2em;">●</span>
+    7secs
+  </div>
+
+  {{#if invalid}}
+  <div class="card p-2xl text-center">
+    <i class="bi bi-lock" style="font-size: 2.5rem; color: var(--c-text-light);" aria-hidden="true"></i>
+    <h1 class="mt-lg" style="font-size: var(--fs-xl);">Link ungültig</h1>
+    <p class="text-muted text-sm mt-md">Dieser Upload-Link wurde bereits verwendet oder existiert nicht.</p>
+  </div>
+
+  {{else}}
+
+  {{#if error}}
+  <div class="alert alert-error mb-lg" role="alert">
+    <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+    <span>{{error}}</span>
+  </div>
+  {{/if}}
+
+  <div class="card">
+    <!-- Team context -->
+    <div class="p-xl border-bottom text-center">
+      <div class="team-id">{{mannschaft.id}}</div>
+      <h1 class="mt-md" style="font-size: var(--fs-xl);">{{mannschaft.name}}</h1>
+    </div>
+
+    <!-- Player context -->
+    <div class="p-xl border-bottom">
+      <div class="flex items-center gap-md">
+        <div class="player-avatar" aria-hidden="true">{{spieler.anzeigename.[0]}}</div>
+        <div>
+          <div class="text-sm text-muted">Sound hochladen für</div>
+          <div class="font-bold" style="font-size: var(--fs-lg);">{{spieler.anzeigename}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload form -->
+    <form action="/upload/public/{{tokenEntry.token}}" method="POST" enctype="multipart/form-data" class="p-xl flex flex-col gap-lg">
+
+      <div class="alert alert-accent" role="note">
+        <i class="bi bi-stopwatch flex-shrink-0" aria-hidden="true"></i>
+        <div><strong>Tipp:</strong> 7 Sekunden sind ideal – lang genug für den Hallen-Moment, kurz genug fürs Spiel.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="upload-file">Deine MP3-Datei</label>
+        <input type="file" id="upload-file" name="file" accept=".mp3,audio/mpeg" required>
+        <span class="form-hint">Nur MP3-Format, max. 10 MB.</span>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        <i class="bi bi-cloud-upload" aria-hidden="true"></i>
+        Sound hochladen
+      </button>
+    </form>
+
+    <div class="text-center text-sm text-muted p-lg" style="border-top: 1.5px solid var(--c-border);">
+      <i class="bi bi-shield-check" aria-hidden="true"></i>
+      Dieser Link ist einmalig und wird nach dem Upload deaktiviert.
+    </div>
+  </div>
+  {{/if}}
+
+</div>
+
+</body>
+</html>

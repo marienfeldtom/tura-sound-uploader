@@ -1,0 +1,473 @@
+{{!< false}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>7secs – Torsongs in 7 Sekunden</title>
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Das Soundboard für deine Handball-Mannschaft. Spielernamen antippen – Torsong läuft. Fertig.">
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body { background: var(--c-bg); }
+
+    /* ── Layout ── */
+    .landing-wrap {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+    }
+
+    /* ══════════════════════════════
+       HERO – linke Seite
+    ══════════════════════════════ */
+    .hero {
+      background: var(--c-brand);
+      padding: var(--sp-3xl);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Diagonales Muster */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 28px,
+        rgb(255 255 255 / .04) 28px,
+        rgb(255 255 255 / .04) 30px
+      );
+      pointer-events: none;
+    }
+
+    /* Eyebrow-Pill */
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      background: var(--c-accent);
+      color: #1a1400;           /* Fast schwarz – aber AUF amber, nicht auf Blau */
+      font-weight: 700;
+      font-size: var(--fs-sm);
+      padding: 0.35em 0.9em;
+      border-radius: var(--r-full);
+      width: fit-content;
+      letter-spacing: 0.03em;
+      margin-bottom: var(--sp-xl);
+    }
+
+    /* Hauptüberschrift */
+    .hero-headline {
+      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--sp-lg);
+    }
+
+    .hero-headline em {
+      font-style: normal;
+      color: var(--c-accent);
+    }
+
+    /* Untertitel */
+    .hero-sub {
+      font-size: var(--fs-md);
+      color: rgb(255 255 255 / .85);  /* hell genug auf dunklem Blau */
+      line-height: 1.7;
+      max-width: 44ch;
+      margin-bottom: var(--sp-2xl);
+    }
+
+    /* ── Soundboard-Demo ── */
+    .demo-label {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: rgb(255 255 255 / .5);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--sp-md);
+    }
+
+    .soundboard {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .sb-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      padding: 0.55em 1.1em;
+      background: rgb(255 255 255 / .12);
+      border: 1.5px solid rgb(255 255 255 / .22);
+      border-radius: var(--r-full);
+      color: #ffffff;              /* weiß – lesbar auf Blau */
+      font-weight: 700;
+      font-size: var(--fs-base);
+      cursor: pointer;
+      transition: background 120ms ease, border-color 120ms ease, transform 100ms ease;
+      user-select: none;
+    }
+
+    .sb-btn:hover,
+    .sb-btn.is-playing {
+      background: var(--c-accent);
+      border-color: var(--c-accent);
+      color: #1a1400;
+      transform: scale(1.04);
+    }
+
+    .sb-btn.is-playing .sb-icon::before { content: '\F4C6'; }  /* bi-stop-fill fallback */
+
+    .sb-icon { font-size: 0.9em; }
+
+    /* ── USP-Zeile ── */
+    .usp-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-xl);
+      padding-top: var(--sp-xl);
+      border-top: 1px solid rgb(255 255 255 / .15);
+    }
+
+    .usp-item { display: flex; flex-direction: column; gap: 2px; }
+
+    .usp-number {
+      font-size: var(--fs-2xl);
+      font-weight: 900;
+      color: var(--c-accent);
+      line-height: 1;
+    }
+
+    .usp-label {
+      font-size: var(--fs-sm);
+      color: rgb(255 255 255 / .7);  /* hell auf Blau */
+      line-height: 1.4;
+    }
+
+    /* ══════════════════════════════
+       AUTH-PANEL – rechte Seite
+    ══════════════════════════════ */
+    .auth-panel {
+      background: var(--c-surface);
+      border-left: 1.5px solid var(--c-border);
+      padding: var(--sp-3xl) var(--sp-2xl);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .auth-logo {
+      font-weight: 800;
+      font-size: var(--fs-lg);
+      color: var(--c-text);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-bottom: 0.25rem;
+    }
+
+    .auth-tagline {
+      font-size: var(--fs-sm);
+      color: var(--c-text-muted);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    /* Tab switcher */
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      background: var(--c-border);
+      border-radius: var(--r-md);
+      padding: 4px;
+      margin-bottom: var(--sp-xl);
+    }
+
+    .auth-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-xs);
+      padding: 0.6rem 1rem;
+      border-radius: calc(var(--r-md) - 2px);
+      font-weight: 600;
+      font-size: var(--fs-sm);
+      color: var(--c-text-muted);
+      border: none;
+      background: transparent;
+      transition: background var(--t-fast), color var(--t-fast), box-shadow var(--t-fast);
+    }
+
+    .auth-tab[aria-selected="true"] {
+      background: var(--c-bg);
+      color: var(--c-text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .auth-form { display: none; }
+    .auth-form.is-active { display: flex; flex-direction: column; gap: var(--sp-lg); }
+
+    /* Erfolgs-Box nach Registrierung */
+    .success-box {
+      text-align: center;
+      padding: var(--sp-xl);
+      background: #f0fdf4;
+      border: 2px solid #bbf7d0;
+      border-radius: var(--r-lg);
+      margin-bottom: var(--sp-xl);
+    }
+
+    .success-team-id {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      color: var(--c-brand);
+      margin: var(--sp-md) 0;
+      display: block;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .landing-wrap {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        padding: var(--sp-2xl) var(--sp-lg);
+      }
+      .hero-headline { font-size: 2.4rem; }
+      .auth-panel {
+        border-left: none;
+        border-top: 1.5px solid var(--c-border);
+        padding: var(--sp-2xl) var(--sp-lg);
+      }
+    }
+
+    @media (max-width: 400px) {
+      .usp-strip { gap: var(--sp-lg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="landing-wrap">
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero" aria-label="Willkommen bei 7secs">
+
+    <div class="hero-eyebrow">
+      <i class="bi bi-speaker-fill" aria-hidden="true"></i>
+      Torsong-Soundboard
+    </div>
+
+    <h1 class="hero-headline">
+      Spieler antippen.<br>
+      <em>Song läuft. 7 Sek.</em>
+    </h1>
+
+    <p class="hero-sub">
+      7secs ist das Soundboard für deine Handball-Mannschaft.
+      Kein DJ, kein Chaos – einfach den Spielernamen antippen
+      und der persönliche Torsong läuft genau 7 Sekunden.
+    </p>
+
+    <!-- Interaktive Demo-Vorschau -->
+    <p class="demo-label" aria-hidden="true">So funktioniert's →</p>
+    <div class="soundboard" role="group" aria-label="Demo-Soundboard">
+      <button class="sb-btn" type="button" onclick="demoPlay(this)" data-name="Tom M.">
+        <i class="bi bi-play-fill sb-icon" aria-hidden="true"></i>
+        Tom M.
+      </button>
+      <button class="sb-btn" type="button" onclick="demoPlay(this)" data-name="Max K.">
+        <i class="bi bi-play-fill sb-icon" aria-hidden="true"></i>
+        Max K.
+      </button>
+      <button class="sb-btn" type="button" onclick="demoPlay(this)" data-name="Jonas B.">
+        <i class="bi bi-play-fill sb-icon" aria-hidden="true"></i>
+        Jonas B.
+      </button>
+      <button class="sb-btn" type="button" onclick="demoPlay(this)" data-name="Felix H.">
+        <i class="bi bi-play-fill sb-icon" aria-hidden="true"></i>
+        Felix H.
+      </button>
+      <button class="sb-btn" type="button" onclick="demoPlay(this)" data-name="Lukas R.">
+        <i class="bi bi-play-fill sb-icon" aria-hidden="true"></i>
+        Lukas R.
+      </button>
+      <button class="sb-btn" type="button" onclick="demoPlay(this)" data-name="David S.">
+        <i class="bi bi-play-fill sb-icon" aria-hidden="true"></i>
+        David S.
+      </button>
+    </div>
+
+    <div class="usp-strip" aria-label="Warum 7secs?">
+      <div class="usp-item">
+        <span class="usp-number">7</span>
+        <span class="usp-label">Sekunden – der perfekte Hallen-Moment</span>
+      </div>
+      <div class="usp-item">
+        <span class="usp-number">1 Klick</span>
+        <span class="usp-label">Spieler antippen → Song startet sofort</span>
+      </div>
+      <div class="usp-item">
+        <span class="usp-number">100%</span>
+        <span class="usp-label">persönlich – jeder Spieler, sein Song</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══ AUTH PANEL ═══ -->
+  <aside class="auth-panel">
+
+    <div class="auth-logo">
+      <span style="color: var(--c-accent); font-size: 1.3em;">●</span>
+      7secs
+    </div>
+    <p class="auth-tagline">Torsongs in 7 Sekunden – für jede Mannschaft</p>
+
+    {{#if success}}
+    <div class="success-box">
+      <p class="font-bold" style="color: var(--c-success); font-size: var(--fs-sm);">
+        <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+        Mannschaft registriert!
+      </p>
+      <span class="success-team-id">{{success}}</span>
+      <p class="text-sm text-muted">Das ist deine Mannschafts-ID.<br>Notiere sie – du brauchst sie zum Einloggen.</p>
+    </div>
+    {{/if}}
+
+    {{#if error}}
+    <div class="alert alert-error mb-lg" role="alert">
+      <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+      <span>{{error}}</span>
+    </div>
+    {{/if}}
+
+    <!-- Tab switcher -->
+    <div class="auth-tabs" role="tablist" aria-label="Login oder Registrieren">
+      <button class="auth-tab"
+        id="tab-login" role="tab" aria-selected="{{#unless success}}true{{else}}false{{/unless}}"
+        aria-controls="form-login">
+        <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+        Einloggen
+      </button>
+      <button class="auth-tab"
+        id="tab-register" role="tab" aria-selected="{{#if success}}true{{else}}false{{/if}}"
+        aria-controls="form-register">
+        <i class="bi bi-person-plus" aria-hidden="true"></i>
+        Registrieren
+      </button>
+    </div>
+
+    <!-- Login-Formular -->
+    <form id="form-login" class="auth-form {{#unless success}}is-active{{/unless}}"
+      action="/auth/login" method="POST" role="tabpanel" aria-labelledby="tab-login" novalidate>
+      <div class="form-group">
+        <label for="login-email">E-Mail</label>
+        <input type="email" id="login-email" name="email"
+          placeholder="deine@email.de" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="login-password">Passwort</label>
+        <input type="password" id="login-password" name="password"
+          placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+        Einloggen
+      </button>
+    </form>
+
+    <!-- Registrierungs-Formular -->
+    <form id="form-register" class="auth-form {{#if success}}is-active{{/if}}"
+      action="/auth/register" method="POST" role="tabpanel" aria-labelledby="tab-register" novalidate>
+      <div class="form-group">
+        <label for="reg-email">E-Mail</label>
+        <input type="email" id="reg-email" name="email"
+          placeholder="deine@email.de" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Passwort</label>
+        <input type="password" id="reg-password" name="password"
+          placeholder="Mindestens 6 Zeichen" required minlength="6" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label for="reg-team">Name deiner Mannschaft</label>
+        <input type="text" id="reg-team" name="mannschaftName"
+          placeholder="z.B. Herren 2024" required autocomplete="off">
+        <span class="form-hint">Du bekommst danach eine zufällige Mannschafts-ID.</span>
+      </div>
+      <button type="submit" class="btn btn-accent btn-lg btn-block">
+        <i class="bi bi-person-plus" aria-hidden="true"></i>
+        Mannschaft registrieren
+      </button>
+    </form>
+
+  </aside>
+</div>
+
+<script>
+  /* ── Tab-Switching ── */
+  const tabs  = document.querySelectorAll('.auth-tab');
+  const forms = document.querySelectorAll('.auth-form');
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t  => t.setAttribute('aria-selected', 'false'));
+      forms.forEach(f => f.classList.remove('is-active'));
+      tab.setAttribute('aria-selected', 'true');
+      forms[i].classList.add('is-active');
+      forms[i].querySelector('input')?.focus();
+    });
+  });
+
+  /* ── Demo-Soundboard-Animation ── */
+  let demoTimer = null;
+  let activeBtn = null;
+
+  function demoPlay(btn) {
+    // Stop vorherigen
+    if (activeBtn && activeBtn !== btn) {
+      resetBtn(activeBtn);
+    }
+    clearTimeout(demoTimer);
+
+    if (btn.classList.contains('is-playing')) {
+      resetBtn(btn);
+      return;
+    }
+
+    const icon = btn.querySelector('.sb-icon');
+    btn.classList.add('is-playing');
+    icon.className = 'bi bi-stop-fill sb-icon';
+    btn.setAttribute('aria-label', btn.dataset.name + ' – läuft (7s)');
+    activeBtn = btn;
+
+    // Nach 7 Sekunden automatisch stoppen (wie in der echten App)
+    demoTimer = setTimeout(() => resetBtn(btn), 7000);
+  }
+
+  function resetBtn(btn) {
+    const icon = btn.querySelector('.sb-icon');
+    btn.classList.remove('is-playing');
+    icon.className = 'bi bi-play-fill sb-icon';
+    btn.setAttribute('aria-label', btn.dataset.name);
+    if (activeBtn === btn) activeBtn = null;
+  }
+</script>
+
+</body>
+</html>
