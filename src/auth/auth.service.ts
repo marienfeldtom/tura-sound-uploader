@@ -27,6 +27,9 @@ export class AuthService {
     // Create user with the mannschaft ID
     const user = await this.usersService.create(email, password, mannschaft.id);
     // Update mannschaft ownerId to the real user id
-    return { user, mannschaft };
+    await this.mannschaftenService.updateOwner(mannschaft.id, user.id);
+    mannschaft.ownerId = user.id;
+    const { passwordHash, ...cleanUser } = user;
+    return { user: cleanUser, mannschaft };
   }
 }

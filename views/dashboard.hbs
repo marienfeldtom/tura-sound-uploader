@@ -1,5 +1,92 @@
 <div class="page">
 
+  <!-- Welcome / Handball-ID Onboarding Banner (nach Registrierung) -->
+  {{#if welcomeInfo}}
+  <section class="welcome-card p-xl mb-2xl" id="welcome-banner" aria-labelledby="welcome-title">
+    <div class="welcome-header mb-lg">
+      <div>
+        <div class="welcome-badge mb-xs">
+          <i class="bi bi-stars" aria-hidden="true"></i>
+          Registrierung erfolgreich
+        </div>
+        <h2 id="welcome-title" style="font-size: var(--fs-xl); color: var(--c-text);">
+          Willkommen bei 7secs! Deine Mannschaft ist startklar.
+        </h2>
+        <p class="text-muted text-sm mt-xs">
+          Deine Mannschaft <strong>{{welcomeInfo.mannschaftName}}</strong> wurde erfolgreich angelegt. Hier ist deine offizielle Handball-ID:
+        </p>
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('welcome-banner').remove()" aria-label="Hinweis schließen" title="Hinweis schließen">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- Handball-ID Highlight Box -->
+    <div class="welcome-id-highlight mb-lg">
+      <div class="flex items-center gap-md flex-wrap">
+        <div>
+          <span class="text-sm text-muted font-bold" style="text-transform: uppercase; letter-spacing: 0.05em; display: block;">Deine Handball-ID</span>
+          <div class="team-id team-id-lg mt-xs" id="welcome-team-id">{{welcomeInfo.mannschaftId}}</div>
+        </div>
+        <div class="sm-hidden" style="border-left: 1.5px solid var(--c-border); height: 48px; margin: 0 var(--sp-xs);"></div>
+        <div class="text-sm text-muted" style="max-width: 420px;">
+          <strong style="color: var(--c-text);">Das ist dein Mannschafts-Code für die Halle.</strong><br>
+          Mit diesem 3-stelligen Code wird dein Team in der 7secs Mobile App verknüpft.
+        </div>
+      </div>
+      <div class="flex items-center gap-sm">
+        <button type="button" class="btn btn-outline btn-sm" onclick="copyHandballId('{{welcomeInfo.mannschaftId}}')" id="btn-copy-handball-id">
+          <i class="bi bi-clipboard" id="btn-copy-id-icon" aria-hidden="true"></i>
+          <span id="btn-copy-id-text">ID kopieren</span>
+        </button>
+        <a href="/mannschaft/{{welcomeInfo.urlId}}" class="btn btn-primary btn-sm">
+          <i class="bi bi-arrow-right-circle-fill" aria-hidden="true"></i>
+          Zum Kader &amp; Sounds
+        </a>
+      </div>
+    </div>
+
+    <!-- Explanation 3-Grid: Was bedeutet die Handball-ID? -->
+    <div class="welcome-info-grid">
+      <div class="welcome-info-item">
+        <div class="welcome-info-item-header">
+          <div class="welcome-info-item-icon">
+            <i class="bi bi-phone" aria-hidden="true"></i>
+          </div>
+          <span>1. In der App eingeben</span>
+        </div>
+        <p class="text-sm text-muted">
+          Hallensprecher, Trainer oder DJ laden die <strong>7secs App</strong> herunter und geben einmalig die ID <strong>{{welcomeInfo.mannschaftId}}</strong> ein, um das Soundboard eures Teams zu laden.
+        </p>
+      </div>
+
+      <div class="welcome-info-item">
+        <div class="welcome-info-item-header">
+          <div class="welcome-info-item-icon">
+            <i class="bi bi-music-note-beamed" aria-hidden="true"></i>
+          </div>
+          <span>2. Torsongs hinterlegen</span>
+        </div>
+        <p class="text-sm text-muted">
+          Lege hier im Dashboard eure Spieler an und lade 7-Sekunden-Sounds hoch – oder erstelle Upload-Links, damit die Spieler ihre MP3s selbst einsenden.
+        </p>
+      </div>
+
+      <div class="welcome-info-item">
+        <div class="welcome-info-item-header">
+          <div class="welcome-info-item-icon">
+            <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+          </div>
+          <span>3. Spieltag &amp; Torjubel</span>
+        </div>
+        <p class="text-sm text-muted">
+          Im Spiel genügt <strong>1 Fingertipp</strong> auf den Spielernamen: Der Torsong spielt exakt 7 Sekunden. Keine Verzögerung, volle Stimmung in der Halle!
+        </p>
+      </div>
+    </div>
+  </section>
+  {{/if}}
+
   <!-- Page header -->
   <header class="section-header">
     <div>
@@ -101,4 +188,36 @@
 document.querySelectorAll('dialog').forEach(d => {
   d.addEventListener('click', e => { if (e.target === d) d.close(); });
 });
+
+function copyHandballId(id) {
+  const icon = document.getElementById('btn-copy-id-icon');
+  const text = document.getElementById('btn-copy-id-text');
+
+  function showCopied() {
+    if (icon) icon.className = 'bi bi-check2';
+    if (text) text.textContent = 'Kopiert!';
+    setTimeout(() => {
+      if (icon) icon.className = 'bi bi-clipboard';
+      if (text) text.textContent = 'ID kopieren';
+    }, 2500);
+  }
+
+  function fallback() {
+    const temp = document.createElement('textarea');
+    temp.value = id;
+    document.body.appendChild(temp);
+    temp.select();
+    try {
+      document.execCommand('copy');
+      showCopied();
+    } catch(e) {}
+    document.body.removeChild(temp);
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(id).then(showCopied, fallback);
+  } else {
+    fallback();
+  }
+}
 </script>

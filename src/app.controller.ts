@@ -73,10 +73,26 @@ export class AppController {
       req.flash('loginError', 'Diese E-Mail ist bereits registriert.');
       return res.redirect('/');
     }
-    const { mannschaft } = await this.authService.register(email, password, mannschaftName);
-    // Show only the 3-char part in the success message (without #)
-    req.flash('success', mannschaft.id.replace(/^#/, ''));
-    res.redirect('/');
+    const { user, mannschaft } = await this.authService.register(email, password, mannschaftName);
+    
+    if (typeof req.logIn === 'function') {
+      await new Promise<void>((resolve, reject) => {
+        req.logIn(user, (err) => {
+          if (err) return reject(err);
+          resolve();
+        });
+      });
+    }
+
+    req.flash(
+      'welcomeInfo',
+      JSON.stringify({
+        mannschaftId: mannschaft.id,
+        mannschaftName: mannschaft.name,
+        urlId: mannschaft.id.replace(/^#/, ''),
+      }),
+    );
+    res.redirect('/dashboard');
   }
 
   @Get('/logout')
@@ -89,17 +105,32 @@ export class AppController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('/dashboard')
-  @Render('dashboard')
-  async dashboard(@Req() req) {
-    const user = await this.usersService.findById(req.user.id);
+  async dashboard(@Req() req, @Res() res: Response) {
+    const user = await this.usersService.findById(req.user?.id);
+    if (!user) {
+      req.logout();
+      return res.redirect('/');
+    }
     const ownedIds = user.ownedMannschaftIds || [];
     const mannschaften = await this.mannschaftenService.findManyByIds(ownedIds);
-    return {
+
+    const welcomeFlash = req.flash('welcomeInfo');
+    let welcomeInfo = null;
+    if (welcomeFlash && welcomeFlash.length > 0) {
+      try {
+        welcomeInfo = JSON.parse(welcomeFlash[0]);
+      } catch (e) {
+        welcomeInfo = null;
+      }
+    }
+
+    return res.render('dashboard', {
       user,
       message: req.flash('message'),
       error: req.flash('error'),
+      welcomeInfo,
       mannschaften,
-    };
+    });
   }
 
   @UseGuards(AuthenticatedGuard)
@@ -124,8 +155,8 @@ export class AppController {
   @Render('spieler')
   async spielerList(@Param() params, @Req() req) {
     const mannschaftId = toDbId(params.id); // H4R → #H4R
-    const user = await this.usersService.findById(req.user.id);
-    const ownedIds = user.ownedMannschaftIds || [];
+    const user = await this.usersService.findById(req.user?.id);
+    const ownedIds = user?.ownedMannschaftIds || [];
 
     if (!ownedIds.includes(mannschaftId)) {
       throw new NotFoundException('Mannschaft nicht gefunden oder kein Zugriff.');

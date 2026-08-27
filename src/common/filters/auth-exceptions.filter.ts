@@ -24,10 +24,11 @@ export class AuthExceptionFilter implements ExceptionFilter {
       exception instanceof UnauthorizedException ||
       exception instanceof ForbiddenException
     ) {
-      request.flash('loginError', 'Bitte versuche es nochmal!');
+      request.flash('loginError', 'E-Mail oder Passwort ist nicht korrekt.');
       response.redirect('/');
     } else {
-      response.redirect('/error');
+      request.flash('error', exception.message || 'Ein Fehler ist aufgetreten.');
+      response.redirect('/dashboard');
     }
   }
 }

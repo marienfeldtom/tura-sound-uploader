@@ -45,6 +45,10 @@ export class MannschaftenService {
     return all.filter((m: any) => ids.includes(m.id));
   }
 
+  async updateOwner(id: string, ownerId: string): Promise<any> {
+    return await this.lowdbService.update({ id }, { ownerId }, 'mannschaften');
+  }
+
   async findAll(): Promise<any[]> {
     return await this.lowdbService.findAll('mannschaften');
   }
