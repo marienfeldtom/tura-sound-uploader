@@ -1,0 +1,570 @@
+{{!< false}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Datenschutzerklärung – 7secs</title>
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#1e40af">
+  <meta name="apple-mobile-web-app-title" content="7secs">
+  <meta name="description" content="Datenschutzerklärung für die 7secs Mobile App im Google Play Store und die zugehörige Web-Plattform.">
+
+  <!-- Favicons & App Icons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="36x36" href="/icons/icon-36-ldpi.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/icons/icon-48-mdpi.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96-xhdpi.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192-xxxhdpi.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192-xxxhdpi.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png">
+  <link rel="manifest" href="/manifest.json">
+
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      background: var(--c-surface);
+      color: var(--c-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .legal-header {
+      background: var(--c-brand);
+      color: #ffffff;
+      padding: var(--sp-2xl) var(--sp-xl);
+      border-bottom: 3px solid var(--c-accent);
+    }
+
+    .legal-header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .legal-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      background: var(--c-accent);
+      color: #1a1400;
+      font-weight: 700;
+      font-size: var(--fs-sm);
+      padding: 0.3em 0.85em;
+      border-radius: var(--r-full);
+      margin-bottom: var(--sp-md);
+    }
+
+    .legal-title {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: var(--sp-sm);
+    }
+
+    .legal-subtitle {
+      color: rgb(255 255 255 / 0.85);
+      font-size: var(--fs-md);
+      max-width: 60ch;
+    }
+
+    .legal-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: var(--sp-2xl) var(--sp-xl);
+      flex: 1;
+      width: 100%;
+    }
+
+    .legal-nav-bar {
+      margin-bottom: var(--sp-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--sp-md);
+    }
+
+    .legal-card {
+      background: var(--c-bg);
+      border: 1.5px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--sp-2xl);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--sp-xl);
+    }
+
+    .legal-toc {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: var(--sp-lg);
+      margin-bottom: var(--sp-2xl);
+    }
+
+    .legal-toc-title {
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--c-text-muted);
+      margin-bottom: var(--sp-md);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+    }
+
+    .legal-toc ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--sp-xs) var(--sp-lg);
+    }
+
+    .legal-toc a {
+      font-size: var(--fs-sm);
+      color: var(--c-brand);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 0;
+    }
+
+    .legal-toc a:hover {
+      text-decoration: underline;
+    }
+
+    .legal-section {
+      margin-bottom: var(--sp-2xl);
+      scroll-margin-top: 2rem;
+    }
+
+    .legal-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .legal-section h2 {
+      font-size: var(--fs-xl);
+      color: var(--c-brand);
+      margin-bottom: var(--sp-md);
+      padding-bottom: var(--sp-xs);
+      border-bottom: 1.5px solid var(--c-border);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+    }
+
+    .legal-section h3 {
+      font-size: var(--fs-lg);
+      color: var(--c-text);
+      margin-top: var(--sp-lg);
+      margin-bottom: var(--sp-sm);
+    }
+
+    .legal-section p, .legal-section li {
+      color: var(--c-text);
+      line-height: 1.7;
+      margin-bottom: var(--sp-md);
+    }
+
+    .legal-section ul {
+      padding-left: var(--sp-xl);
+      margin-bottom: var(--sp-md);
+    }
+
+    .legal-section li {
+      margin-bottom: var(--sp-xs);
+    }
+
+    .playstore-highlight {
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: var(--r-md);
+      padding: var(--sp-lg);
+      margin: var(--sp-lg) 0;
+    }
+
+    .playstore-highlight-title {
+      font-weight: 800;
+      color: var(--c-brand);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-xs);
+      font-size: var(--fs-md);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--sp-md) 0 var(--sp-lg);
+      font-size: var(--fs-sm);
+    }
+
+    .data-table th, .data-table td {
+      border: 1px solid var(--c-border);
+      padding: var(--sp-sm) var(--sp-md);
+      text-align: left;
+    }
+
+    .data-table th {
+      background: var(--c-surface);
+      font-weight: 700;
+      color: var(--c-text);
+    }
+
+    .badge-no {
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 700;
+      padding: 0.15em 0.6em;
+      border-radius: var(--r-full);
+      display: inline-block;
+    }
+
+    .legal-footer {
+      background: var(--c-bg);
+      border-top: 1.5px solid var(--c-border);
+      padding: var(--sp-xl);
+      text-align: center;
+      font-size: var(--fs-sm);
+      color: var(--c-text-muted);
+    }
+
+    .contact-box {
+      background: var(--c-surface);
+      border-left: 4px solid var(--c-accent);
+      padding: var(--sp-md) var(--sp-lg);
+      border-radius: 0 var(--r-md) var(--r-md) 0;
+      margin: var(--sp-md) 0;
+    }
+
+    @media print {
+      .legal-nav-bar, .legal-toc { display: none; }
+      body { background: #fff; }
+      .legal-card { border: none; box-shadow: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="legal-header">
+  <div class="legal-header-inner">
+    <div class="legal-pill">
+      <i class="bi bi-shield-lock-fill" aria-hidden="true"></i>
+      Google Play Store &amp; DSGVO Konformität
+    </div>
+    <h1 class="legal-title">Datenschutzerklärung</h1>
+    <p class="legal-subtitle">
+      Informationen über die Verarbeitung personenbezogener Daten in der mobilen App <strong>7secs</strong> sowie dem dazugehörigen Web-Portal und der REST-API.
+    </p>
+  </div>
+</header>
+
+<div class="legal-container">
+
+  <!-- Nav Bar -->
+  <div class="legal-nav-bar">
+    <a href="{{#if isAuthenticated}}/dashboard{{else}}/{{/if}}" class="btn btn-outline btn-sm">
+      <i class="bi bi-arrow-left" aria-hidden="true"></i>
+      {{#if isAuthenticated}}Zurück zum Dashboard{{else}}Zurück zur Startseite{{/if}}
+    </a>
+    <span class="text-sm text-muted">Stand: August 2026</span>
+  </div>
+
+  <div class="legal-card">
+
+    <!-- Table of Contents -->
+    <nav class="legal-toc" aria-label="Inhaltsverzeichnis">
+      <div class="legal-toc-title">
+        <i class="bi bi-list-nested" aria-hidden="true"></i>
+        Inhaltsübersicht
+      </div>
+      <ul>
+        <li><a href="#abschnitt-1">1. Verantwortliche Stelle &amp; Kontakt</a></li>
+        <li><a href="#abschnitt-2">2. Geltungsbereich &amp; Überblick</a></li>
+        <li><a href="#abschnitt-3">3. Mobile App im Google Play Store</a></li>
+        <li><a href="#abschnitt-4">4. Google Play Datensicherheit (Data Safety)</a></li>
+        <li><a href="#abschnitt-5">5. Web-Portal, Benutzerkonten &amp; Uploads</a></li>
+        <li><a href="#abschnitt-6">6. Server-Logfiles &amp; technische Daten</a></li>
+        <li><a href="#abschnitt-7">7. Rechtsgrundlagen der Verarbeitung (DSGVO)</a></li>
+        <li><a href="#abschnitt-8">8. Speicherdauer &amp; Datenlöschung (Konto-Löschung)</a></li>
+        <li><a href="#abschnitt-9">9. Ihre Rechte als betroffene Person</a></li>
+        <li><a href="#abschnitt-10">10. Schutz von Minderjährigen</a></li>
+        <li><a href="#abschnitt-11">11. Datensicherheit (TLS / Verschlüsselung)</a></li>
+        <li><a href="#abschnitt-12">12. Aktualität &amp; Änderungen</a></li>
+      </ul>
+    </nav>
+
+    <!-- 1. Verantwortlicher -->
+    <section id="abschnitt-1" class="legal-section">
+      <h2><i class="bi bi-person-badge" aria-hidden="true"></i> 1. Name und Kontaktdaten des Verantwortlichen</h2>
+      <p>
+        Verantwortliche Stelle für die Datenverarbeitung im Sinne der Datenschutz-Grundverordnung (DSGVO) und anderer nationaler Datenschutzgesetze ist:
+      </p>
+      
+      <div class="contact-box">
+        <strong>7secs – Soundboard &amp; Management</strong><br>
+        Tom Marienfeld<br>
+        E-Mail: <a href="mailto:marienfeldtom@googlemail.com">marienfeldtom@googlemail.com</a><br>
+        Websites: <a href="https://mato.digital" target="_blank" rel="noopener">https://mato.digital</a> &nbsp;&bull;&nbsp; <a href="https://sound.beugelbuddel.de" target="_blank" rel="noopener">https://sound.beugelbuddel.de</a>
+      </div>
+
+      <p class="text-sm text-muted">
+        Bei Fragen zur Erhebung, Verarbeitung oder Nutzung Ihrer personenbezogenen Daten, bei Auskünften, Berichtigung, Sperrung oder Löschung von Daten können Sie sich jederzeit an die oben angegebene E-Mail-Adresse wenden.
+      </p>
+    </section>
+
+    <!-- 2. Geltungsbereich -->
+    <section id="abschnitt-2" class="legal-section">
+      <h2><i class="bi bi-compass" aria-hidden="true"></i> 2. Geltungsbereich</h2>
+      <p>
+        Diese Datenschutzerklärung gilt für:
+      </p>
+      <ul>
+        <li>Die mobile Android-Anwendung <strong>„7secs“</strong>, die über den Google Play Store bezogen werden kann.</li>
+        <li>Das Web-Verwaltungsportal unter <strong>mato.digital</strong> und <strong>sound.beugelbuddel.de</strong> zur Verwaltung von Mannschaften, Spielern und Torsongs.</li>
+        <li>Die öffentliche Programmierschnittstelle (REST-API unter <code>/api/*</code>), über welche die mobile App Daten und Audiodateien abruft.</li>
+      </ul>
+    </section>
+
+    <!-- 3. Mobile App Play Store -->
+    <section id="abschnitt-3" class="legal-section">
+      <h2><i class="bi bi-google-play" aria-hidden="true"></i> 3. Datenverarbeitung in der mobilen App (Google Play Store)</h2>
+      <p>
+        Die mobile App <strong>7secs</strong> wurde nach dem Grundsatz der Datensparsamkeit („Privacy by Design“) entwickelt. Sie dient als Hallen-Soundboard für Handball- und Sportveranstaltungen zum sekundenschnellen Abspielen von Torsongs (ca. 7 Sekunden Wiedergabezeit).
+      </p>
+
+      <h3>3.1 Erforderliche Android-Berechtigungen</h3>
+      <p>
+        Die App fordert ausschließlich Berechtigungen an, die für den Betrieb und die Kernfunktionen der App zwingend erforderlich sind:
+      </p>
+      <ul>
+        <li>
+          <strong><code>android.permission.INTERNET</code> (Voller Netzwerkzugriff):</strong><br>
+          Wird benötigt, um die Mannschafts- und Spielerlisten über die gesicherte REST-API abzurufen und die zugehörigen Torsongs (MP3-Audiodateien) herunterzuladen bzw. zu streamen.
+        </li>
+        <li>
+          <strong><code>android.permission.ACCESS_NETWORK_STATE</code> (Netzwerkverbindungen anzeigen):</strong><br>
+          Wird benötigt, um festzustellen, ob das Mobilgerät online ist, und um den Offline-Cache in Hallen mit schlechter Internetverbindung nahtlos zu aktivieren.
+        </li>
+      </ul>
+
+      <h3>3.2 Lokale Zwischenspeicherung (App-Cache)</h3>
+      <p>
+        Zur Gewährleistung einer unterbrechungsfreien Funktion in Sporthallen werden heruntergeladene MP3-Dateien und Mannschaftsdaten im <strong>internen, geschützten App-Speicher</strong> Ihres Android-Geräts zwischengespeichert (Offline-Caching). Diese Daten verbleiben auf Ihrem Gerät und sind für andere Apps nicht zugänglich.
+      </p>
+
+      <h3>3.3 Keine invasive Datenerhebung / Keine Tracker</h3>
+      <div class="playstore-highlight">
+        <div class="playstore-highlight-title">
+          <i class="bi bi-shield-check" aria-hidden="true"></i>
+          Garantie für Nutzer der Google Play Store App:
+        </div>
+        <ul style="margin-bottom: 0;">
+          <li><strong>Kein Tracking / Keine Analyse-Dienste:</strong> Wir verwenden weder Google Analytics für Firebase noch Flurry, Mixpanel oder sonstige Tracking-Dienste.</li>
+          <li><strong>Keine Werbung:</strong> Die App enthält keine Werbebanner oder Werbe-SDKs (wie Google AdMob, Unity Ads etc.).</li>
+          <li><strong>Kein Zugriff auf sensible Gerätedaten:</strong> Die App greift <u>nicht</u> auf Ihren Standort (GPS), Kontakte, Fotos/Dateien außerhalb des App-Ordners, Kamera oder Mikrofon zu.</li>
+          <li><strong>Keine Weitergabe von Werbe-IDs:</strong> Die Google Advertising ID (AAID) wird von uns weder ausgelesen noch an Server oder Dritte übertragen.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 4. Google Play Data Safety -->
+    <section id="abschnitt-4" class="legal-section">
+      <h2><i class="bi bi-card-checklist" aria-hidden="true"></i> 4. Google Play Datensicherheit (Data Safety Declarations)</h2>
+      <p>
+        Gemäß den Richtlinien für Entwickler im Google Play Store deklarieren wir den Umgang mit Daten wie folgt:
+      </p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kategorie</th>
+            <th>Erfasste Daten</th>
+            <th>Zweck</th>
+            <th>Weitergabe an Dritte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Benutzerinhalte</strong></td>
+            <td>Audiodateien (MP3-Torsongs), Spielernamen</td>
+            <td>Bereitstellung der Kernfunktion (Soundboard-Wiedergabe)</td>
+            <td><span class="badge-no">Nein (0 Dritte)</span></td>
+          </tr>
+          <tr>
+            <td><strong>App-Info &amp; Leistung</strong></td>
+            <td>Technische Server-Logfiles (IP-Adresse, Zeitstempel, aufgerufener Endpunkt)</td>
+            <td>Netzwerksicherheit, Fehlerbehebung, Schutz vor Überlastung</td>
+            <td><span class="badge-no">Nein</span></td>
+          </tr>
+          <tr>
+            <td><strong>Persönliche Daten (App)</strong></td>
+            <td>Keine (Reine App-Nutzung ohne Registrierungspflicht möglich)</td>
+            <td>–</td>
+            <td><span class="badge-no">Nein</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle flex-shrink-0" aria-hidden="true"></i>
+        <div>
+          <strong>Sicherheitspraktiken:</strong> Alle Daten werden während der Übertragung verschlüsselt (HTTPS mit moderner TLS-Verschlüsselung). Nutzer können die Löschung ihrer Daten jederzeit verlangen.
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Web-Portal & Benutzerkonten -->
+    <section id="abschnitt-5" class="legal-section">
+      <h2><i class="bi bi-globe" aria-hidden="true"></i> 5. Datenverarbeitung auf dem Web-Portal &amp; Backend</h2>
+      <p>
+        Um Mannschaften anzulegen und Torsongs zu verwalten, steht das Web-Portal zur Verfügung. Hierbei werden folgende Daten verarbeitet:
+      </p>
+
+      <h3>5.1 Registrierung und Benutzerkonto (Mannschafts-Administratoren)</h3>
+      <p>
+        Bei der Registrierung eines Kontos zur Mannschaftsverwaltung erheben wir:
+      </p>
+      <ul>
+        <li><strong>E-Mail-Adresse:</strong> Zur eindeutigen Identifikation des Kontos und für administrative Mitteilungen.</li>
+        <li><strong>Passwort:</strong> Wird niemals im Klartext gespeichert, sondern mittels des sicheren kryptografischen Verfahrens <code>bcrypt</code> mit sicherem Salt gehasht.</li>
+        <li><strong>Mannschaftsname:</strong> Zur Anzeige und Zuweisung einer eindeutigen Mannschafts-ID (z.&nbsp;B. <code>#H4R</code>).</li>
+      </ul>
+
+      <h3>5.2 Spieler- und Soundverwaltung</h3>
+      <p>
+        Innerhalb des Mannschaftsbereichs können Administratoren oder Spieler selbst Torsongs hinterlegen:
+      </p>
+      <ul>
+        <li><strong>Anzeigename des Spielers:</strong> Der auf den Soundboard-Buttons angezeigte Name (z.&nbsp;B. Vorname oder Spitzname).</li>
+        <li><strong>MP3-Audiodatei:</strong> Der hochgeladene Torsong-Ausschnitt (max. 10 MB).</li>
+        <li><strong>Upload-Tokens:</strong> Temporäre, kryptografische Einweg-Tokens, die es Spielern ermöglichen, ihren Song ohne Registrierung hochzuladen.</li>
+      </ul>
+
+      <h3>5.3 Cookies</h3>
+      <p>
+        Das Web-Portal setzt ausschließlich ein <strong>technisch notwendiges Session-Cookie</strong> (<code>connect.sid</code>) ein, um den Login-Status eines Administrators aufrechtzuerhalten. Es werden keine Tracking-Cookies, Werbe-Cookies oder Third-Party-Cookies verwendet.
+      </p>
+    </section>
+
+    <!-- 6. Server-Logs -->
+    <section id="abschnitt-6" class="legal-section">
+      <h2><i class="bi bi-hdd-network" aria-hidden="true"></i> 6. Server-Logfiles</h2>
+      <p>
+        Beim Zugriff auf unsere Webseiten oder die REST-API erfasst unser Webserver automatisch technische Informationen in Server-Logdateien:
+      </p>
+      <ul>
+        <li>IP-Adresse des anfragenden Geräts</li>
+        <li>Datum und Uhrzeit des Abrufs inklusive Zeitzone</li>
+        <li>Aufgerufene URL und HTTP-Methode (z.&nbsp;B. <code>GET /api/info/H4R</code>)</li>
+        <li>HTTP-Statuscode der Serverantwort</li>
+        <li>Übertragene Datenmenge in Bytes</li>
+        <li>User-Agent (Browsertyp bzw. Version des mobilen Betriebssystems)</li>
+      </ul>
+      <p>
+        Diese Daten werden getrennt von anderen personenbezogenen Daten gespeichert. Eine Zusammenführung mit anderen Datenquellen wird nicht vorgenommen. Die Erfassung dient ausschließlich der Sicherstellung eines störungsfreien Betriebs, der Fehleranalyse und der Abwehr von Cyberangriffen.
+      </p>
+    </section>
+
+    <!-- 7. Rechtsgrundlagen -->
+    <section id="abschnitt-7" class="legal-section">
+      <h2><i class="bi bi-journal-text" aria-hidden="true"></i> 7. Rechtsgrundlagen der Verarbeitung (DSGVO)</h2>
+      <p>
+        Die Verarbeitung personenbezogener Daten erfolgt im Einklang mit der EU-Datenschutz-Grundverordnung (DSGVO):
+      </p>
+      <ul>
+        <li><strong>Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung / Vorvertragliche Maßnahmen):</strong> Für die Bereitstellung der App-Funktionen, der Soundboard-API und des Benutzerkontos zur Mannschaftsverwaltung.</li>
+        <li><strong>Art. 6 Abs. 1 lit. f DSGVO (Berechtigtes Interesse):</strong> Für die Speicherung technischer Server-Logfiles zur Gewährleistung der IT-Sicherheit und Stabilität unserer Server.</li>
+        <li><strong>Art. 6 Abs. 1 lit. a DSGVO (Einwilligung):</strong> Soweit Sie uns freiwillig Daten (z.&nbsp;B. beim Hochladen von Audiodateien oder Spielernamen) zur Verfügung stellen. Eine erteilte Einwilligung kann jederzeit widerrufen werden.</li>
+      </ul>
+    </section>
+
+    <!-- 8. Speicherdauer & Löschung -->
+    <section id="abschnitt-8" class="legal-section">
+      <h2><i class="bi bi-trash3" aria-hidden="true"></i> 8. Speicherdauer &amp; Datenlöschung (Account-Löschung)</h2>
+      <p>
+        Wir verarbeiten und speichern personenbezogene Daten nur so lange, wie es zur Erreichung des jeweiligen Speicherungszwecks erforderlich ist:
+      </p>
+      <ul>
+        <li><strong>Server-Logfiles:</strong> Werden nach maximal 14 Tagen automatisch gelöscht oder anonymisiert.</li>
+        <li><strong>Spieler und Torsongs:</strong> Können vom Mannschafts-Administrator jederzeit direkt im Web-Dashboard gelöscht werden. Bei Löschung eines Spielers wird die zugehörige MP3-Datei unverzüglich vom Server entfernt.</li>
+        <li><strong>Konto- und Datenlöschung (Google Play Anforderung):</strong> Sie können Ihr Benutzerkonto sowie alle zugehörigen Daten (Mannschaften, Spieler, Torsongs) jederzeit vollständig löschen lassen. Senden Sie hierzu einfach eine formlose E-Mail an <a href="mailto:marienfeldtom@googlemail.com">marienfeldtom@googlemail.com</a> mit Ihrer registrierten E-Mail-Adresse. Sämtliche Kontodaten werden daraufhin unwiderruflich innerhalb von 30 Tagen gelöscht.</li>
+        <li><strong>Lokaler App-Cache:</strong> Kann auf dem Smartphone jederzeit über die Android-Systemeinstellungen (<em>Einstellungen &gt; Apps &gt; 7secs &gt; Speicher &gt; Cache leeren</em>) oder durch Deinstallation der App gelöscht werden.</li>
+      </ul>
+    </section>
+
+    <!-- 9. Betroffenenrechte -->
+    <section id="abschnitt-9" class="legal-section">
+      <h2><i class="bi bi-shield-shaded" aria-hidden="true"></i> 9. Ihre Rechte als betroffene Person</h2>
+      <p>
+        Nach der Datenschutz-Grundverordnung stehen Ihnen als betroffene Person folgende Rechte zu:
+      </p>
+      <ul>
+        <li><strong>Recht auf Auskunft (Art. 15 DSGVO):</strong> Sie haben das Recht, Auskunft über Ihre von uns verarbeiteten personenbezogenen Daten zu verlangen.</li>
+        <li><strong>Recht auf Berichtigung (Art. 16 DSGVO):</strong> Sie haben das Recht auf Berichtigung unrichtiger oder Vervollständigung unvollständiger Daten.</li>
+        <li><strong>Recht auf Löschung („Recht auf Vergessenwerden“, Art. 17 DSGVO):</strong> Sie können die unverzügliche Löschung Ihrer Daten verlangen, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</li>
+        <li><strong>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO):</strong> Sie können die Einschränkung der Verarbeitung Ihrer Daten verlangen.</li>
+        <li><strong>Recht auf Datenübertragbarkeit (Art. 20 DSGVO):</strong> Sie haben das Recht, Ihre Daten in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten.</li>
+        <li><strong>Widerspruchsrecht (Art. 21 DSGVO):</strong> Sie können der Verarbeitung Ihrer Daten aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit widersprechen.</li>
+        <li><strong>Widerrufsrecht bei Einwilligungen (Art. 7 Abs. 3 DSGVO):</strong> Sie können eine einmal erteilte Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen.</li>
+        <li><strong>Beschwerderecht bei der Aufsichtsbehörde (Art. 77 DSGVO):</strong> Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten durch uns zu beschweren.</li>
+      </ul>
+    </section>
+
+    <!-- 10. Minderjährige -->
+    <section id="abschnitt-10" class="legal-section">
+      <h2><i class="bi bi-people" aria-hidden="true"></i> 10. Schutz von Minderjährigen</h2>
+      <p>
+        Unsere Dienste richten sich an Sportmannschaften, Trainer, Betreuer und Hallensprecher. Wir erfassen nicht wissentlich personenbezogene Daten von Kindern unter 16 Jahren ohne ausdrückliche Zustimmung der Erziehungsberechtigten. Sollten wir feststellen, dass ein Kind unter 16 Jahren uns ohne elterliche Zustimmung personenbezogene Daten übermittelt hat, werden wir diese Daten unverzüglich löschen.
+      </p>
+    </section>
+
+    <!-- 11. Datensicherheit -->
+    <section id="abschnitt-11" class="legal-section">
+      <h2><i class="bi bi-lock" aria-hidden="true"></i> 11. Datensicherheit</h2>
+      <p>
+        Wir nutzen innerhalb des Web-Besuchs und der REST-API das verbreitete SSL/TLS-Verfahren (Transport Layer Security) in Verbindung mit der jeweils höchsten Verschlüsselungsstufe, die von Ihrem Browser oder Mobilgerät unterstützt wird. Zudem sichern wir unsere Server und Systeme durch technische und organisatorische Maßnahmen gegen Verlust, Zerstörung, Zugriff, Veränderung oder Verbreitung Ihrer Daten durch unbefugte Personen ab.
+      </p>
+      <p>
+        Zur visuellen Darstellung von Icons nutzt diese Webseite die freie Icon-Schrift <em>Bootstrap Icons</em> über das Content Delivery Network von <code>jsdelivr.net</code>. Beim Laden der Icons wird Ihre IP-Adresse technisch bedingt an den CDN-Betreiber übermittelt. Rechtsgrundlage ist unser berechtigtes Interesse an einer einheitlichen und ansprechenden Darstellung (Art. 6 Abs. 1 lit. f DSGVO).
+      </p>
+    </section>
+
+    <!-- 12. Aktualität -->
+    <section id="abschnitt-12" class="legal-section">
+      <h2><i class="bi bi-arrow-repeat" aria-hidden="true"></i> 12. Aktualität und Änderung dieser Datenschutzerklärung</h2>
+      <p>
+        Diese Datenschutzerklärung ist aktuell gültig und hat den Stand <strong>August 2026</strong>.
+      </p>
+      <p>
+        Durch die Weiterentwicklung unserer Android-App und Webangebote oder aufgrund geänderter gesetzlicher bzw. behördlicher Vorgaben kann es notwendig werden, diese Datenschutzerklärung anzupassen. Die jeweils aktuelle Datenschutzerklärung kann jederzeit unter dieser Adresse (<code>/datenschutz</code>) von Ihnen abgerufen werden.
+      </p>
+    </section>
+
+  </div>
+
+  <div class="text-center mt-xl mb-xl">
+    <a href="{{#if isAuthenticated}}/dashboard{{else}}/{{/if}}" class="btn btn-primary">
+      <i class="bi bi-arrow-left" aria-hidden="true"></i>
+      {{#if isAuthenticated}}Zurück zum Dashboard{{else}}Zurück zur Startseite{{/if}}
+    </a>
+  </div>
+
+</div>
+
+<footer class="legal-footer">
+  <div>&copy; 2026 7secs – Torsongs in 7 Sekunden. Alle Rechte vorbehalten.</div>
+  <div class="mt-xs">
+    <a href="/datenschutz" class="font-bold">Datenschutz</a>
+    &nbsp;&bull;&nbsp;
+    <a href="{{#if isAuthenticated}}/dashboard{{else}}/{{/if}}">Startseite</a>
+  </div>
+</footer>
+
+</body>
+</html>

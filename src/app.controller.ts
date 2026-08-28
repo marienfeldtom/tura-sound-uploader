@@ -55,6 +55,16 @@ export class AppController {
     };
   }
 
+  @Get('/datenschutz')
+  @Render('datenschutz')
+  datenschutz(@Req() req): object {
+    const isAuthenticated = typeof req.isAuthenticated === 'function' ? req.isAuthenticated() : !!req.user;
+    return {
+      isAuthenticated,
+      layout: false,
+    };
+  }
+
   @UseGuards(LoginGuard)
   @Post('/auth/login')
   login(@Res() res: Response) {
@@ -429,6 +439,12 @@ export class AppController {
       <!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
       <title>Upload erfolgreich</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="theme-color" content="#1e40af">
+      <link rel="icon" type="image/x-icon" href="/favicon.ico">
+      <link rel="icon" type="image/png" sizes="48x48" href="/icons/icon-48-mdpi.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192-xxxhdpi.png">
+      <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192-xxxhdpi.png">
+      <link rel="manifest" href="/manifest.json">
       <link rel="stylesheet" href="/app.css">
       <style>body{min-height:100svh;display:grid;place-items:center;background:var(--c-surface);padding:var(--sp-xl)}</style>
       </head><body>

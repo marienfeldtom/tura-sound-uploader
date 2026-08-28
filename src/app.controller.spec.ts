@@ -466,5 +466,31 @@ describe('AppController', () => {
       expect(res.redirect).toHaveBeenCalledWith('/dashboard');
     });
   });
+
+  describe('datenschutz', () => {
+    it('should render datenschutz with isAuthenticated false when user is not logged in', () => {
+      const req = {
+        isAuthenticated: jest.fn().mockReturnValue(false),
+        user: null,
+      };
+      const result = appController.datenschutz(req as any);
+      expect(result).toEqual({
+        isAuthenticated: false,
+        layout: false,
+      });
+    });
+
+    it('should render datenschutz with isAuthenticated true when user is logged in', () => {
+      const req = {
+        isAuthenticated: jest.fn().mockReturnValue(true),
+        user: { id: 'u1' },
+      };
+      const result = appController.datenschutz(req as any);
+      expect(result).toEqual({
+        isAuthenticated: true,
+        layout: false,
+      });
+    });
+  });
 });
 
